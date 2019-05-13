@@ -41,3 +41,20 @@ target_include_directories(
 
 # This sets several common target properties, such as the library's output directory.
 houdini_configure_target(${library_name})
+
+# This changes the directory so that it installs into
+# `~/houdiniX.Y/dso/mantra` instead of the default `~/houdiniX.Y/dso`.
+# We need it to be in the "mantra" folder because this is a Mantra plug-in
+#
+houdini_get_default_install_dir(INSTALLATION_DIRECTORY)
+string(APPEND INSTALLATION_DIRECTORY "/dso/mantra")
+set(output_dir_properties
+    LIBRARY_OUTPUT_DIRECTORY
+    LIBRARY_OUTPUT_DIRECTORY_DEBUG
+    LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO
+    LIBRARY_OUTPUT_DIRECTORY_RELEASE
+)
+foreach (output_dir_property ${output_dir_properties} )
+    set_target_properties( ${library_name}
+        PROPERTIES ${output_dir_property} "${INSTALLATION_DIRECTORY}" )
+endforeach ()
